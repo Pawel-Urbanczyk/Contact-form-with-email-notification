@@ -6,6 +6,33 @@ session_start();
         $_SESSION['a'] = $a;
         $_SESSION['b'] = $b;
     }
+
+    $result = '';
+    $error = '';
+    $name= '';
+    $email = '';
+    $message ='';
+
+    if(isset($_POST['submit'])){
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $message = $_POST['message'];
+        $check = intval($_POST['secCheck']);
+
+        if(!$_POST['name']){$error .= 'Please enter your Name ! <br>';}
+        if(!$_POST['email'] || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){$error .= 'Please enter your Email ! <br>';}
+        if(!$_POST['message']){$error .= 'Please enter your Message ! <br>';}
+        if($check !==($_SESSION['a']+$_SESSION['b'])){$error .= 'Wrong value ! <br>';}
+
+    }
+
+    if($error==''){
+        //Send Email
+        $result = '<div class="alert alert-success">Mail Sent !<br>'.$error.' </div>';
+        }else{
+        $result = '<div class="alert alert-danger">Error Found:<br>'.$error.' </div>';
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -46,7 +73,7 @@ session_start();
                         <!--Name Start-->
                             <label for="name" class="col-sm-2 control-label">Name: </label>
                             <div class="col-sm-10">
-                                <input type="text" name="name" id="name" placeholder="Insert your Name !" class="form-control">
+                                <input type="text" name="name" id="name" placeholder="Insert your Name !" class="form-control" value="<?php echo $name;?>">
                                 <p class="text-danger">You need to enter a Name Value</p>
                             </div>
                         <!--Name End-->
@@ -54,7 +81,7 @@ session_start();
                         <!--Email Start-->
                             <label for="email" class="col-sm-2 control-label">Email: </label>
                             <div class="col-sm-10">
-                                <input type="email" name="email" id="email" placeholder="Insert your Email !" class="form-control">
+                                <input type="email" name="email" id="email" placeholder="Insert your Email !" class="form-control" value="<?php echo $email; ?>" >
                                 <p class="text-danger">You need to enter a Email Value</p>
                             </div>
                         <!--Email End-->
@@ -62,7 +89,7 @@ session_start();
                         <!--Message Start-->
                         <label for="message" class="col-sm-2 control-label">Message: </label>
                         <div class="col-sm-10">
-                            <textarea name="message" id="message" class="form-control" rows="4"></textarea>
+                            <textarea name="message" id="message" class="form-control" rows="4"><?php echo $message; ?></textarea>
                             <p class="text-danger">You need to enter a Message</p>
                         </div>
                         <!--Message End-->
@@ -82,6 +109,14 @@ session_start();
                             </div>
                         </div>
                         <!--Submit End-->
+
+                        <!--Error Start-->
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-2">
+                               <?php echo $result; ?>
+                            </div>
+                        </div>
+                        <!--Error End-->
                     </div>
                 </form>
             </div>

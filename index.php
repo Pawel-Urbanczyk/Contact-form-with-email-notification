@@ -1,23 +1,25 @@
 <?php
 session_start();
-    if(!$_SESSION['a']){
-        $a = rand(1,50);
-        $b = rand(1,50);
-        $_SESSION['a'] = $a;
-        $_SESSION['b'] = $b;
-    }
 
-    $result = '';
-    $error = '';
-    $name= '';
-    $email = '';
-    $message ='';
+if(!$_SESSION["a"]){
+    $a = rand(1,50);
+    $b = rand(1,50);
+    $_SESSION["a"] = $a;
+    $_SESSION["b"] = $b;
+}
 
-    if(isset($_POST['submit'])){
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $message = $_POST['message'];
-        $check = intval($_POST['secCheck']);
+$email = '';
+$message = '';
+$name ='';
+$result ='';
+$error ='';
+
+if(isset($_POST['submit'])){
+
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
+    $check = intval($_POST['secCheck']);
 
         if(!$_POST['name']){$error .= 'Please enter your Name ! <br>';}
         if(!$_POST['email'] || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){$error .= 'Please enter your Email ! <br>';}
@@ -26,27 +28,28 @@ session_start();
 
 
 
-    if($error==''){
-        //Send Email
-        $from=$email;
-        $to = 'pawel.urbanczyk90@gmail.com';
-        $subject='Message from contact form';
-        $body="From: $name ($email)\n Message: \n $message";
-        $headers="MIME-Version: 1.0" . "\r\n";
+    if($error == ''){
+        $from = '';
+        $to =   ''; // email that you want to receive the email to. YOUR ADDRESS
+        $subject = 'Message from contact form';
+        $body = "From: $name ($email) \n Message \n $message";
+        $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .='From: <'.$from.'>' . "\r\n";
-
-        if(mail($to, $subject, $body, $headers)){
-            $result = '<div class="alert alert-success">Mail Sent !<br>'.$error.' </div>';
+        $headers .= 'From: <'.$from.'>' . "\r\n";
+        if(mail($to,$subject,$body,$headers)){
+            $result = '<div class="alert alert-success">Mail Sent</div>';
         }else{
-            $result = '<div class="alert alert-warning">Mail Wasnt Sent !<br>'.$error.' </div>';
+            $result = '<div class="alert alert-danger">Mail wasn\'t sent</div>';
         }
+        $email = '';
+        $message = '';
+        $name ='';
 
-    }else{
-        $result = '<div class="alert alert-danger">Error Found:<br>'.$error.' </div>';
+        // Send email
+    } else {
+        $result = '<div class="alert alert-danger">Error Found:<br>'.$error.'</div>';
     }
-    }
-
+}
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -78,66 +81,72 @@ session_start();
 		
 		
 	</head>
-	<body>
-
-        <div class="container">
-            <div class="row">
-                <form action="index.php" method="POST" class="">
-                    <div class="form-group">
-                        <!--Name Start-->
-                            <label for="name" class="col-sm-2 control-label">Name: </label>
-                            <div class="col-sm-10">
-                                <input type="text" name="name" id="name" placeholder="Insert your Name !" class="form-control" value="<?php echo $name;?>">
-                                <p class="text-danger">You need to enter a Name Value</p>
-                            </div>
-                        <!--Name End-->
-
-                        <!--Email Start-->
-                            <label for="email" class="col-sm-2 control-label">Email: </label>
-                            <div class="col-sm-10">
-                                <input type="email" name="email" id="email" placeholder="Insert your Email !" class="form-control" value="<?php echo $email; ?>" >
-                                <p class="text-danger">You need to enter a Email Value</p>
-                            </div>
-                        <!--Email End-->
-
-                        <!--Message Start-->
-                        <label for="message" class="col-sm-2 control-label">Message: </label>
-                        <div class="col-sm-10">
-                            <textarea name="message" id="message" class="form-control" rows="4"><?php echo $message; ?></textarea>
-                            <p class="text-danger">You need to enter a Message</p>
-                        </div>
-                        <!--Message End-->
-
-                        <!--Antispam/Captcha Start-->
-                        <label for="secCheck" class="col-sm-2 control-label"><?php echo  $_SESSION['a'] .' + '.  $_SESSION['b'];?> ?</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="secCheck" id="secCheck" class="form-control">
-                            <p class="text-danger">Answer that question !</p>
-                        </div>
-                        <!--Antispam/Captcha End-->
-
-                        <!--Submit Start-->
-                        <div class="form-group">
-                            <div class="col-sm-10 col-sm-offset-2">
-                                <input type="submit" value="Send" class="btn btn-primary btn-large btn-block" id="submit" name="submit">
-                            </div>
-                        </div>
-                        <!--Submit End-->
-
-                        <!--Error Start-->
-                        <div class="form-group">
-                            <div class="col-sm-10 col-sm-offset-2">
-                               <?php echo $result; ?>
-                            </div>
-                        </div>
-                        <!--Error End-->
+    <body>
+    <div class="container">
+        <div class="row">
+            <form method="post" action="index.php" class="form-horizontal">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="name" name="name" placeholder="Enter your name" class="form-control" value="<?php echo $name;?>">
+                        <p class="text-danger">You need to enter a name value</p>
                     </div>
-                </form>
-            </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" id="email" name="email" placeholder="your@email.com" class="form-control" value="<?php echo $email;?>">
+                        <p class="text-danger">You need to enter a valid email</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="col-sm-2 control-label">Message</label>
+                    <div class="col-sm-10">
+                        <textarea id="message" name="message" rows="4" class="form-control"><?php echo $message;?></textarea>
+                        <p class="text-danger">You need to enter a message</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="secCheck" class="col-sm-2 control-label">
+                        <?php echo $_SESSION["a"]  . ' + ' .$_SESSION["b"] ; ?>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="secCheck" name="secCheck" class="form-control">
+                        <p class="text-danger">Answer the question above</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <input type="submit" value="Send" class="btn btn-primary btn-large btn-block" id="submit" name="submit">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <?php echo $result; ?>
+                    </div>
+                </div>
+            </form>
         </div>
 
-        <script>
+    </div>
 
-        </script>
-	</body>
+    <script>
+        $('form').on('submit',function(){
+            $(".text-danger").hide();
+            var holderValue = false;
+            $(this).find('input[type!="hidden"]').each(function(){
+                if(!$(this).val()){holderValue =true; $(this).parent().find(".text-danger").show();}
+            })
+            if(!$("#message").val()  ){holderValue =true; $("#message").parent().find(".text-danger").show();};
+
+            //event.preventDefault();
+            /// console.log($('#message').val() );
+
+        })
+    </script>
+    </body>
+
 </html>

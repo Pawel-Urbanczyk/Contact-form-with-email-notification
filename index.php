@@ -24,13 +24,27 @@ session_start();
         if(!$_POST['message']){$error .= 'Please enter your Message ! <br>';}
         if($check !==($_SESSION['a']+$_SESSION['b'])){$error .= 'Wrong value ! <br>';}
 
-    }
+
 
     if($error==''){
         //Send Email
-        $result = '<div class="alert alert-success">Mail Sent !<br>'.$error.' </div>';
+        $from=$email;
+        $to = 'pawel.urbanczyk90@gmail.com';
+        $subject='Message from contact form';
+        $body="From: $name ($email)\n Message: \n $message";
+        $headers="MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .='From: <'.$from.'>' . "\r\n";
+
+        if(mail($to, $subject, $body, $headers)){
+            $result = '<div class="alert alert-success">Mail Sent !<br>'.$error.' </div>';
         }else{
+            $result = '<div class="alert alert-warning">Mail Wasnt Sent !<br>'.$error.' </div>';
+        }
+
+    }else{
         $result = '<div class="alert alert-danger">Error Found:<br>'.$error.' </div>';
+    }
     }
 
 ?>

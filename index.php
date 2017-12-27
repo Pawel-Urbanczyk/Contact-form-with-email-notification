@@ -88,15 +88,13 @@ if(isset($_POST['submit'])){
                 <div class="form-group">
                     <label for="name" class="col-sm-2 control-label">Name</label>
                     <div class="col-sm-10">
-                        <input type="text" id="name" name="name" placeholder="Enter your name" class="form-control" value="<?php echo $name;?>">
-                        <p class="text-danger">You need to enter a name value</p>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" class="form-control" value="<?php echo $name;?>" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email" class="col-sm-2 control-label">Email</label>
                     <div class="col-sm-10">
-                        <input type="email" id="email" name="email" placeholder="your@email.com" class="form-control" value="<?php echo $email;?>">
-                        <p class="text-danger">You need to enter a valid email</p>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" class="form-control" value="<?php echo $email;?>" required>
                     </div>
                 </div>
 
@@ -104,7 +102,6 @@ if(isset($_POST['submit'])){
                     <label for="message" class="col-sm-2 control-label">Message</label>
                     <div class="col-sm-10">
                         <textarea id="message" name="message" rows="4" class="form-control"><?php echo $message;?></textarea>
-                        <p class="text-danger">You need to enter a message</p>
                     </div>
                 </div>
 
@@ -113,8 +110,7 @@ if(isset($_POST['submit'])){
                         <?php echo $_SESSION["a"]  . ' + ' .$_SESSION["b"] ; ?>
                     </label>
                     <div class="col-sm-10">
-                        <input type="text" id="secCheck" name="secCheck" class="form-control">
-                        <p class="text-danger">Answer the question above</p>
+                        <input type="text" id="secCheck" name="secCheck" class="form-control" required>
                     </div>
                 </div>
 
@@ -133,20 +129,7 @@ if(isset($_POST['submit'])){
 
     </div>
 
-    <script>
-        $('form').on('submit',function(){
-            $(".text-danger").hide();
-            var holderValue = false;
-            $(this).find('input[type!="hidden"]').each(function(){
-                if(!$(this).val()){holderValue =true; $(this).parent().find(".text-danger").show();}
-            })
-            if(!$("#message").val()  ){holderValue =true; $("#message").parent().find(".text-danger").show();};
 
-            //event.preventDefault();
-            /// console.log($('#message').val() );
-
-        })
-    </script>
     </body>
 
 </html>
